@@ -25,9 +25,6 @@ const getResident = async (req, res, next) => {
 };
 
 const createResident = async (req, res, next) => {
-  // if (req.role != "admin") {
-  //   res.status(403).send("Cannot create a resident!");
-  // }
   try {
     const newResident = await Resident.createResidents(req.body);
     res.status(201).json(newResident);
@@ -53,9 +50,6 @@ const updateResident = async (req, res, next) => {
 };
 
 const deleteResident = async (req, res, next) => {
-  // if (req.role != "admin") {
-  //   return res.status(404).send("Cannot delete a resident!");
-  // }
   try {
     Resident.deleteResident(req.params.id);
     return res.status(204).send("Resident Deleted");

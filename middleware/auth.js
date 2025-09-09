@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../models/userModel");
+const passport = require("passport");
 
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
@@ -27,4 +28,18 @@ function passportConfig(passport) {
   );
 }
 
-module.exports = { passportConfig, jwtExpire };
+function authenticateJWT() {
+  return passport.authenticate("jwt", { session: false });
+}
+
+// Role-based middleware
+function authorizeRoles(...roles) {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden: Admin rights only" });
+    }
+    next();
+  };
+}
+
+module.exports = { passportConfig, authenticateJWT, authorizeRoles, jwtExpire };

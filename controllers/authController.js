@@ -51,6 +51,7 @@ const loginUser = async (req, res, next) => {
     });
 
     res.json({
+      token,
       user: { id: user.id, email: user.email, role: user.role },
     });
   } catch (err) {
@@ -59,9 +60,6 @@ const loginUser = async (req, res, next) => {
 };
 
 const getUsers = async (req, res, next) => {
-  if (req.role != "admin") {
-    return res.status(403).send("Admin rights only!");
-  }
   try {
     const users = await User.getUsers();
     return res.status(200).json(users);
@@ -70,4 +68,15 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUsers };
+const logoutUser = async (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+};
+
+
+
+module.exports = { registerUser, loginUser, getUsers, logoutUser };
