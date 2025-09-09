@@ -1,43 +1,45 @@
 const pool = require("../config/db");
 
-const createActivities = async (req, res) => {
-  const { resident_id, activity_type, notes, timestamp } = req.body;
+const createActivities = async (resident_id, worker_id, activity_type) => {
   const results = await pool.query(
-    "INSERT INTO activities (activity_type, notes, timestamp) VALUES ($1, $2, $3) RETURNING *",
-    [resident_id, activity_type, notes, timestamp]
+    "INSERT INTO activities (resident_id, worker_id, activity_type ) VALUES ($1, $2, $3) RETURNING *",
+    [resident_id, worker_id, activity_type]
   );
-  res.status(201).send(results.row);
+  return results.rows;
 };
 
-const getAllActivities = async (req, res) => {
+const getAllActivities = async () => {
   const results = await pool.query(
     ` SELECT 
         activities.id AS activity_id, 
         residents.name AS resident_name, 
+        users.name AS workers_name,
         activities.activity_type,
-        activities.notes,
         activities.timestamp 
-    FROM activities JOIN residents ON activities.resident_id = residents.id ORDER BY id ASC`
+    FROM activities 
+    JOIN residents ON activities.resident_id = residents.id 
+    JOIN users ON activities.worker_id = users.id
+    ORDER BY activities.id ASC`
   );
-  res.status(200).json(results.rows);
+  return results.rows;
 };
 
-const getAllActivitiesbyResidentId = async (req, res) => {
-  const id = parseInt(req.params.id);
+const getAllActivitiesbyResidentId = async (residentId) => {
   const results = await pool.query(
     `SELECT 
          activities.id AS activity_id,
          residents.name AS resident_name,
+         users.name AS worker_name,
          activities.activity_type,
-         activities.notes,
          activities.timestamp
        FROM activities
        JOIN residents ON activities.resident_id = residents.id
+       JOIN users ON activities.worker_id = users.id
        WHERE residents.id = $1
        ORDER BY activities.timestamp DESC`,
-    [id]
+    [residentId]
   );
-  res.status(200).json(results.rows);
+  return results.rows;
 };
 
 module.exports = {

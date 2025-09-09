@@ -1,8 +1,9 @@
-const express = require("express"),
-  app = express(),
-  cors = require("cors"),
-  helmet = require("helmet"),
-  bodyParser = require("body-parser");
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const helmet = require("helmet");
+const bodyParser = require("body-parser");
+const { errorHandler } = require("./middleware/errorHandler");
 port = process.env.PORT || 3000;
 
 app.use(helmet());
@@ -21,12 +22,7 @@ app.get("/", (req, res) => {
 const apiRouter = require("./server/api");
 app.use("/api", apiRouter);
 
-app.use((err, req, res, next) => {
-  console.error("Error:", err.message);
-  res.status(err.status || 500).json({
-    error: err.message || "Internal Server Error",
-  });
-});
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Listening to port ${port}`);
