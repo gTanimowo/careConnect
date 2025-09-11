@@ -1,8 +1,5 @@
 ---
 
-## 📌 **Backend README (`README_API.md`)**
-
-```markdown
 # Care Connect Backend API
 
 Express.js API for the Care Connect app.  
