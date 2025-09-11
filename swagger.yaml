@@ -57,6 +57,48 @@ paths:
         "200":
           description: List of workers
 
+  /auth/{id}:
+    put:
+      summary: Update a user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+                  enum: [worker, admin]
+      responses:
+        "200":
+          description: User updated successfully
+    delete:
+      summary: Delete a user (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: User deleted
+
   /residents:
     get:
       summary: Get all residents
@@ -208,7 +250,7 @@ paths:
                   type: string
                 resident_id:
                   type: integer
-                activity_id:
+                worker_id:
                   type: integer
       responses:
         "201":
