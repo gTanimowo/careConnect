@@ -19,7 +19,7 @@ const getAllActivities = async () => {
     FROM activities 
     JOIN residents ON activities.resident_id = residents.id 
     JOIN users ON activities.worker_id = users.id
-    ORDER BY activities.id ASC`
+    ORDER BY activities.id DESC`
   );
   return results.rows;
 };

@@ -206,7 +206,7 @@ paths:
               properties:
                 note:
                   type: string
-                worker_id:
+                resident_id:
                   type: integer
                 activity_id:
                   type: integer

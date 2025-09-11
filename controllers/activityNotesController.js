@@ -21,9 +21,9 @@ const getNotes = async (req, res, next) => {
 };
 
 const addNote = async (req, res, next) => {
-  const { activity_id, worker_id, note } = req.body;
+  const { resident_id, worker_id, note } = req.body;
   try {
-    const newNote = await ActivityNotes.addNote(activity_id, worker_id, note);
+    const newNote = await ActivityNotes.addNote(resident_id, worker_id, note);
     res.status(201).json(newNote);
   } catch (err) {
     next(err);

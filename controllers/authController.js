@@ -23,7 +23,12 @@ const registerUser = async (req, res, next) => {
     });
 
     res.status(201).json({
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
     });
   } catch (err) {
     next(err);
@@ -52,7 +57,12 @@ const loginUser = async (req, res, next) => {
 
     res.json({
       token,
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
     });
   } catch (err) {
     next(err);
@@ -68,6 +78,31 @@ const getUsers = async (req, res, next) => {
   }
 };
 
+const updateUser = async (req, res, next) => {
+  const id = parseInt(req.params.id, 10);
+  const user = req.body;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+
+  try {
+    const updated = await User.updateUserbyId(id, user);
+    res.status(200).json(updated);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteUser = async (req, res, next) => {
+  try {
+    User.deleteUser(req.params.id);
+    return res.status(204).send("User Deleted");
+  } catch (err) {
+    next(err);
+  }
+};
+
 const logoutUser = async (req, res, next) => {
   req.logout(function (err) {
     if (err) {
@@ -77,6 +112,11 @@ const logoutUser = async (req, res, next) => {
   });
 };
 
-
-
-module.exports = { registerUser, loginUser, getUsers, logoutUser };
+module.exports = {
+  registerUser,
+  loginUser,
+  getUsers,
+  logoutUser,
+  deleteUser,
+  updateUser,
+};
